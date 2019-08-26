@@ -6,9 +6,7 @@ import 'dart:convert';
 
 import 'dart:typed_data';
 
-import 'package:seek_book/book_site/encoding/src/convert.dart';
-import 'package:seek_book/book_site/encoding/src/gbk.dart';
-import 'package:seek_book/book_site/encoding/src/unicode.dart';
+import 'package:gbk2utf8/gbk2utf8.dart';
 
 /** The Unicode Replacement character `U+FFFD` (�). */
 const int unicodeReplacementCharacterRune = 0xFFFD;

@@ -122,7 +122,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future chapterParse() async {
-    Dio dio = new Dio();
+    Dio dio = new Dio(
+        BaseOptions(connectTimeout: 5 * 1000, receiveTimeout: 5 * 1000));
     var url = 'http://www.kenwen.com/cview/241/241355/1371839.html';
     Response response = await dio.get(url);
     var document = parse(response.data);

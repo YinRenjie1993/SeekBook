@@ -4,11 +4,12 @@ import 'dart:isolate';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:seek_book/book_site/book_source.dart';
-import 'package:seek_book/book_site/gbk.dart';
+// import 'package:seek_book/book_site/gbk.dart';
 import 'package:seek_book/globals.dart' as Globals;
 import 'package:http/http.dart' as http;
-
 import 'package:gbk2utf8/gbk2utf8.dart';
+
+import 'gbk.dart';
 
 class BookSite {
   //最多请求3次，失败则返回失败。
@@ -135,16 +136,28 @@ class BookSite {
       var param = data['param'];
       switch (functionName) {
         case 'parseBookListByRoleInBack':
-          var result = await instance.parseBookListByRoleInBack(param);
-          replyTo.send(result);
+          try {
+            var result = await instance.parseBookListByRoleInBack(param);
+            replyTo.send(result);
+          } catch (ex) {
+            replyTo.send(null);
+          }
           return;
         case 'parseBookDetailByRoleInBack':
-          var result = await instance.parseBookDetailByRoleInBack(param);
-          replyTo.send(result);
+          try {
+            var result = await instance.parseBookDetailByRoleInBack(param);
+            replyTo.send(result);
+          } catch (ex) {
+            replyTo.send(null);
+          }
           return;
         case 'parseChapterByRoleInBack':
-          var result = await instance.parseChapterByRoleInBack(param);
-          replyTo.send(result);
+          try {
+            var result = await instance.parseChapterByRoleInBack(param);
+            replyTo.send(result);
+          } catch (ex) {
+            replyTo.send(null);
+          }
           return;
       }
       replyTo.send(null);
@@ -430,7 +443,7 @@ class BookSite {
     searchUrl = searchUrl.replaceAll('@', '?');
     http.Response response = await request(searchUrl, 5);
 //    var data = response.data;
-    print('返回的response ${response}');
+    print('返回的response $response');
     var data = '';
     data = requestBody2Utf8(response, isGbk);
 
@@ -551,7 +564,7 @@ class BookSite {
     var chapterListDoc = doc;
 
     var dataMulu;
-    print('ruleChapterUrl, ${ruleChapterUrl}');
+    print('ruleChapterUrl, $ruleChapterUrl');
     if (ruleChapterUrl != null && ruleChapterUrl.isNotEmpty) {
       List muluResult = parseWholeRole(doc, ruleChapterUrl);
       if (muluResult.length > 0) {
@@ -687,7 +700,7 @@ class BookSite {
     }
     if (isGbk) {
       print('GBK编码，转一下');
-      return decodeGbk(response.bodyBytes);
+      return gbk.decode(response.bodyBytes);
     } else {
       print('默认Utf8编码');
       var result;
@@ -697,7 +710,8 @@ class BookSite {
         print(e);
         try {
           print('Utf8解码失败，使用GBK解码');
-          result = decodeGbk(response.bodyBytes);
+
+          result = gbk.decode(response.bodyBytes);
         } catch (e) {
           print(e);
         }

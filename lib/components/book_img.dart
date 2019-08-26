@@ -23,12 +23,12 @@ class BookImg extends StatelessWidget {
     }
     return new CachedNetworkImage(
       imageUrl: imgUrl,
-      placeholder: Container(
+      placeholder: (context, url) => Container(
         width: dp(imgWidth),
         height: dp(imgWidth / 144 * 192),
         color: Color(0xFFDDDDDD),
       ),
-      errorWidget: Container(
+      errorWidget: (context, url, error) => new Container(
         width: dp(imgWidth),
         height: dp(imgWidth / 144 * 192),
         color: Color(0xFFDDDDDD),
